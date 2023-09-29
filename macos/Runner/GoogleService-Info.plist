@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyDGbCvh02Xqj2-k7Pvo604q8xK6KdAGmJo</string>
+	<key>GCM_SENDER_ID</key>
+	<string>736798290875</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.SVU.AMWS23.eSalesperson</string>
+	<key>PROJECT_ID</key>
+	<string>e-salesperson-75d29</string>
+	<key>STORAGE_BUCKET</key>
+	<string>e-salesperson-75d29.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:736798290875:ios:b8871fed718ce240cc4a9e</string>
+</dict>
+</plist>

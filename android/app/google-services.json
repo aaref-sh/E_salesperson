@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "736798290875",
+    "project_id": "e-salesperson-75d29",
+    "storage_bucket": "e-salesperson-75d29.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:736798290875:android:c8ff8ca459cf5e09cc4a9e",
+        "android_client_info": {
+          "package_name": "com.SVU.AMW_S23.e_salesperson"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBIi6Uvc1A-HzHm3QgCGQ_LZtoaIoXyxDg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
