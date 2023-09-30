@@ -9,7 +9,6 @@ class MainPage extends StatefulWidget {
   State<MainPage> createState() => _MainPageState();
 }
 
-// shit
 class _MainPageState extends State<MainPage> {
   var myPages = [
     ss.Route('Register', const Register()),

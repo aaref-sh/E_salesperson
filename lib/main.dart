@@ -1,36 +1,17 @@
-import 'package:e_salesperson/Screens/mainPage.dart';
-import 'package:e_salesperson/Screens/register.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-
 import 'Screens/loginPage.dart';
+import 'firebase_options.dart';
 
-final GoRouter _router = GoRouter(
-  routes: <RouteBase>[
-    GoRoute(
-        path: '/',
-        builder: (context, state) {
-          return const Login();
-        },
-        routes: [
-          GoRoute(
-            path: 'Home',
-            builder: (context, state) {
-              return const MainPage();
-            },
-            routes: <RouteBase>[
-              GoRoute(
-                  path: 'Register',
-                  builder: (context, state) {
-                    return const Register();
-                  })
-            ],
-          ),
-        ])
-  ],
-);
+// void main() {
+//   runApp(const MyApp());
+// }
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
-void main() {
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -39,7 +20,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: Login(),
     );
   }
