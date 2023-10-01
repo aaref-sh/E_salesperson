@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 
 class Route {
@@ -17,29 +19,36 @@ var placeLabel = <String>[
 ];
 
 class User {
+  final String id;
   final String username;
   final String password;
   final String phoneNumber;
-  final String imageBase64;
+  final Uint8List imageBytes;
   final Place place;
-  User(this.username, this.password, this.phoneNumber, this.place,
-      this.imageBase64);
+  User(this.id, this.username, this.password, this.phoneNumber, this.place,
+      this.imageBytes);
 
   Map<String, dynamic> toJson() => {
+        'ID': id,
         'Username': username,
         'Password': password,
         'PhoneNumber': phoneNumber,
-        'ImageBase64': imageBase64,
+        'imageBytes': imageBytes,
         'Place': place.index
       };
 
   static User fromMap(Map<String, dynamic> data) {
     return User(
+      data['ID'],
       data['Username'],
       data['Password'],
-      data['PhoneNumber'],
-      Place.values[data['Place'] as int],
-      data['ImageBase64'],
+      data.containsKey('Place') ? data['PhoneNumber'] : '',
+      data.containsKey('Place')
+          ? Place.values[data['Place'] as int]
+          : Place.east,
+      data.containsKey('Place')
+          ? (data['imageBytes'] as Uint8List)
+          : Uint8List(0),
     );
   }
 }

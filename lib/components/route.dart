@@ -16,9 +16,7 @@ class _RoutePageState extends State<RoutePage> {
       appBar: AppBar(
         title: Text(widget.routeName),
       ),
-      body: SingleChildScrollView(
-        child: widget.body,
-      ),
+      body: widget.body,
     );
   }
 }
