@@ -3,7 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:e_salesperson/Screens/loginPage.dart';
+import 'package:e_salesperson/Screens/login.dart';
 import 'package:e_salesperson/components/route.dart';
 import 'package:e_salesperson/models/globals.dart';
 import 'package:e_salesperson/models/models.dart';
@@ -36,6 +36,9 @@ class _RegisterState extends State<Register> {
               Container(
                 padding: const EdgeInsets.all(8.0),
                 child: TextField(
+                  onTapOutside: ((event) {
+                    FocusScope.of(context).unfocus();
+                  }),
                   controller: tfusernamecontroller,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
@@ -46,6 +49,9 @@ class _RegisterState extends State<Register> {
               Container(
                 padding: const EdgeInsets.all(8.0),
                 child: TextField(
+                  onTapOutside: ((event) {
+                    FocusScope.of(context).unfocus();
+                  }),
                   controller: tfPasswordcontroller,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
@@ -56,6 +62,9 @@ class _RegisterState extends State<Register> {
               Container(
                 padding: const EdgeInsets.all(8.0),
                 child: TextField(
+                  onTapOutside: ((event) {
+                    FocusScope.of(context).unfocus();
+                  }),
                   controller: tfphonecontroller,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
@@ -79,6 +88,7 @@ class _RegisterState extends State<Register> {
               ),
               Center(
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text('الصورة: '),
                     ElevatedButton(
@@ -93,14 +103,17 @@ class _RegisterState extends State<Register> {
                       }),
                       child: const Text("اختيار"),
                     ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                      child: ElevatedButton(
+                        onPressed: (() {
+                          createUser();
+                        }),
+                        child: const Text("إنشاء"),
+                      ),
+                    ),
                   ],
                 ),
-              ),
-              ElevatedButton(
-                onPressed: (() {
-                  createUser();
-                }),
-                child: const Text("إنشاء"),
               ),
             ],
           ),

@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:e_salesperson/models/globals.dart';
 import 'package:flutter/material.dart';
 
 class RoutePage extends StatefulWidget {
@@ -16,7 +19,16 @@ class _RoutePageState extends State<RoutePage> {
       appBar: AppBar(
         title: Text(widget.routeName),
       ),
-      body: widget.body,
+      body: Stack(
+        children: [
+          Center(
+              child: Image.memory(
+            base64.decode(bgBase64),
+            opacity: const AlwaysStoppedAnimation(0.2),
+          )),
+          widget.body,
+        ],
+      ),
     );
   }
 }

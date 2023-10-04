@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto/crypto.dart';
-import 'package:e_salesperson/Screens/mainPage.dart';
+import 'package:e_salesperson/Screens/home.dart';
 import 'package:e_salesperson/components/route.dart';
 import 'package:e_salesperson/models/globals.dart';
 import 'package:flutter/material.dart';
@@ -39,48 +39,57 @@ class _LoginState extends State<Login> {
   }
 
   @override
+  void initState() {
+    tfusername.text = 'admin';
+    tfpassword.text = 'admin';
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return RoutePage(
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(50),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                padding: const EdgeInsets.all(8.0),
-                child: TextField(
-                  onTapOutside: ((event) {
-                    FocusScope.of(context).unfocus();
-                  }),
-                  controller: tfusername,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'اسم المستخدم',
+      body: SingleChildScrollView(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(50),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                    onTapOutside: ((event) {
+                      FocusScope.of(context).unfocus();
+                    }),
+                    controller: tfusername,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'اسم المستخدم',
+                    ),
                   ),
                 ),
-              ),
-              Container(
-                padding: const EdgeInsets.fromLTRB(8, 2, 8, 2),
-                child: TextField(
-                  onTapOutside: ((event) {
-                    FocusScope.of(context).unfocus();
-                  }),
-                  controller: tfpassword,
-                  obscureText: true,
-                  enableSuggestions: false,
-                  autocorrect: false,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'كلمة المرور',
+                Container(
+                  padding: const EdgeInsets.fromLTRB(8, 2, 8, 2),
+                  child: TextField(
+                    onTapOutside: ((event) {
+                      FocusScope.of(context).unfocus();
+                    }),
+                    controller: tfpassword,
+                    obscureText: true,
+                    enableSuggestions: false,
+                    autocorrect: false,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'كلمة المرور',
+                    ),
                   ),
                 ),
-              ),
-              ElevatedButton(
-                onPressed: tryLogin,
-                child: const Text("تسجيل الدخول"),
-              ),
-            ],
+                ElevatedButton(
+                  onPressed: tryLogin,
+                  child: const Text("تسجيل الدخول"),
+                ),
+              ],
+            ),
           ),
         ),
       ),
