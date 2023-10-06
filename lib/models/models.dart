@@ -26,8 +26,9 @@ class User {
   final String phoneNumber;
   final Uint8List imageBytes;
   final Place place;
+  final String joinDate;
   User(this.id, this.username, this.password, this.phoneNumber, this.place,
-      this.imageBytes);
+      this.imageBytes, this.joinDate);
 
   Map<String, dynamic> toJson() => {
         'ID': id,
@@ -35,21 +36,22 @@ class User {
         'Password': password,
         'PhoneNumber': phoneNumber,
         'imageBytes': imageBytes,
-        'Place': place.index
+        'Place': place.index,
+        'JoinDate': joinDate
       };
 
   static User fromMap(Map<String, dynamic> data) {
+    var loadAll = data.containsKey('Place');
     return User(
       data['ID'],
       data['Username'],
       data['Password'],
-      data.containsKey('Place') ? data['PhoneNumber'] : '',
-      data.containsKey('Place')
-          ? Place.values[data['Place'] as int]
-          : Place.east,
-      data.containsKey('Place')
+      loadAll ? data['PhoneNumber'] : '',
+      loadAll ? Place.values[data['Place'] as int] : Place.east,
+      loadAll
           ? (Uint8List.fromList(data['imageBytes'].cast<int>().toList()))
           : Uint8List(0),
+      loadAll ? data['JoinDate'] : '',
     );
   }
 }
@@ -70,7 +72,7 @@ class Commission {
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        'esats': esats,
+        'easts': esats,
         'wests': wests,
         'norths': norths,
         'sowths': sowths,
@@ -81,7 +83,7 @@ class Commission {
       };
 
   Map<String, dynamic> toUpdateJson() => {
-        'esats': esats,
+        'easts': esats,
         'wests': wests,
         'norths': norths,
         'sowths': sowths,

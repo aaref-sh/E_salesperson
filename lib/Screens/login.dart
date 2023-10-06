@@ -26,12 +26,15 @@ class _LoginState extends State<Login> {
     }
     showDataAlert(context, "الرجاء الانتظار", loading: true);
     var passBytes = utf8.encode(pass);
-    var user = await getUser(username);
+    var user = await getUser(username, login: true);
+    // ignore: use_build_context_synchronously
     Navigator.of(context).pop();
     if (user == null || user.password != sha256.convert(passBytes).toString()) {
+      // ignore: use_build_context_synchronously
       showDataAlert(context, "خطأ في اسم المستخدم أو كلمة المرور");
       return;
     }
+    // ignore: use_build_context_synchronously
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const MainPage()),

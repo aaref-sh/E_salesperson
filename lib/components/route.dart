@@ -21,11 +21,12 @@ class _RoutePageState extends State<RoutePage> {
       ),
       body: Stack(
         children: [
-          Center(
+          Padding(
+              padding: const EdgeInsets.fromLTRB(8, 250, 8, 0),
               child: Image.memory(
-            base64.decode(bgBase64),
-            opacity: const AlwaysStoppedAnimation(0.2),
-          )),
+                base64.decode(bgBase64),
+                opacity: const AlwaysStoppedAnimation(0.2),
+              )),
           widget.body,
         ],
       ),

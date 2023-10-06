@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:e_salesperson/Screens/commission.dart';
 import 'package:e_salesperson/Screens/register.dart';
 import 'package:e_salesperson/Screens/sales.dart';
@@ -20,7 +18,7 @@ class _MainPageState extends State<MainPage> {
     ...isAdmin
         ? [
             ss.Route('إدارة المندوبين', const Register(), Icons.person),
-            ss.Route('العمولات', const Commission(), Icons.money)
+            ss.Route('العمولات', const Commissions(), Icons.money)
           ]
         : [],
     ss.Route('إدخال عمليات البيع', const Sales(), Icons.attach_money),
@@ -53,7 +51,10 @@ class _MainPageState extends State<MainPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => myPages[index].body,
+                          builder: (context) => Directionality(
+                            textDirection: TextDirection.rtl,
+                            child: myPages[index].body,
+                          ),
                         ),
                       );
                     }),

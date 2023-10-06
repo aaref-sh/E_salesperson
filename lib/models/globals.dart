@@ -1,8 +1,12 @@
 import 'package:e_salesperson/models/models.dart';
 import 'package:flutter/material.dart';
+// ignore: depend_on_referenced_packages
+import 'package:intl/intl.dart';
 
 User? me;
 bool isAdmin = false;
+
+String formatDate(DateTime date) => DateFormat('yyyy-MM').format(date);
 
 showDataAlert(BuildContext context, String message, {bool loading = false}) {
   showDialog(

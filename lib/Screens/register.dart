@@ -25,6 +25,8 @@ class _RegisterState extends State<Register> {
   var tfphonecontroller = TextEditingController();
   int placeNum = 0;
   Uint8List imageBytes = Uint8List(0);
+  XFile? image;
+
   @override
   Widget build(BuildContext context) {
     return RoutePage(
@@ -90,71 +92,89 @@ class _RegisterState extends State<Register> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text('الصورة: '),
                     ElevatedButton(
                       onPressed: (() async {
-                        final XFile? image =
+                        imageBytes = Uint8List(0);
+                        image =
                             await picker.pickImage(source: ImageSource.gallery);
-                        // Convert the XFile to a File object
-                        File imageFile = File(image!.path);
-
-                        // Read the bytes of the image file
-                        imageBytes = await imageFile.readAsBytes();
+                        if (image != null) {
+                          File imageFile = File(image!.path);
+                          imageBytes = await imageFile.readAsBytes();
+                        }
+                        setState(() {});
                       }),
-                      child: const Text("اختيار"),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                      child: ElevatedButton(
-                        onPressed: (() {
-                          createUser();
-                        }),
-                        child: const Text("إنشاء"),
-                      ),
+                      child: Text(image == null
+                          ? "اختر صورة"
+                          : image!.path.split('\\').last.split('/').last),
                     ),
                   ],
+                ),
+              ),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                child: ElevatedButton(
+                  onPressed: (() {
+                    createUser();
+                  }),
+                  child: const Text("إنشاء"),
                 ),
               ),
             ],
           ),
         ),
       ),
-      routeName: "Register",
+      routeName: "تسجيل",
     );
   }
 
   Future createUser() async {
-    var username = tfusernamecontroller.text;
-    var phone = tfphonecontroller.text;
-    var pass = tfPasswordcontroller.text;
-    if ([username, phone, pass].any((element) => element == '')) {
-      showDataAlert(context, "جميع الحقول مطلوبة");
-      return;
-    }
-    showDataAlert(context, "الرجاء الانتظار", loading: true);
+    try {
+      var username = tfusernamecontroller.text;
+      var phone = tfphonecontroller.text;
+      var pass = tfPasswordcontroller.text;
+      if ([username, phone, pass].any((element) => element == '')) {
+        showDataAlert(context, "جميع الحقول مطلوبة");
+        return;
+      }
+      showDataAlert(context, "الرجاء الانتظار", loading: true);
 
-    final docUser = FirebaseFirestore.instance.collection('User').doc();
-    var passBytes = utf8.encode(pass);
+      final docUser = FirebaseFirestore.instance.collection('User').doc();
+      var passBytes = utf8.encode(pass);
 
-    var u = await getUser(tfusernamecontroller.text);
+      var u = await getUser(tfusernamecontroller.text);
 
-    if (u != null) {
+      if (u != null) {
+        // ignore: use_build_context_synchronously
+        Navigator.of(context).pop();
+        // ignore: use_build_context_synchronously
+        showDataAlert(context, "اسم المستخدم محجوز");
+        return;
+      }
+      final user = User(
+        docUser.id,
+        username,
+        sha256.convert(passBytes).toString(),
+        phone,
+        Place.values[placeNum],
+        imageBytes,
+        formatDate(DateTime.now()),
+      );
+
+      await docUser.set(user.toJson());
+      setState(() {
+        tfPasswordcontroller.text = '';
+        tfusernamecontroller.text = '';
+        tfphonecontroller.text = '';
+        imageBytes = Uint8List(0);
+        image = null;
+      });
+      // ignore: use_build_context_synchronously
       Navigator.of(context).pop();
-      showDataAlert(context, "اسم المستخدم محجوز");
-      return;
+      // ignore: use_build_context_synchronously
+      showDataAlert(context, "تم إضافة المستخدم");
+    } catch (e) {
+      showDataAlert(context, e.toString());
     }
-    final user = User(
-      docUser.id,
-      username,
-      sha256.convert(passBytes).toString(),
-      phone,
-      Place.values[placeNum],
-      imageBytes,
-    );
-
-    await docUser.set(user.toJson());
-
-    Navigator.of(context).pop();
-    showDataAlert(context, "تم إضافة المستخدم");
   }
 }

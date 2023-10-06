@@ -6,7 +6,6 @@ import 'package:e_salesperson/models/globals.dart';
 import 'package:e_salesperson/models/models.dart';
 import 'package:flutter/material.dart';
 import 'package:month_picker_dialog/month_picker_dialog.dart';
-import 'package:intl/intl.dart';
 
 class Sales extends StatefulWidget {
   const Sales({super.key});
@@ -20,7 +19,8 @@ class _SalesState extends State<Sales> {
 
   @override
   initState() {
-    users = getUsers();
+    users = getUsers(context);
+    users.then((value) => {if (!isAdmin) selected = value[0]});
     super.initState();
   }
 
@@ -31,19 +31,6 @@ class _SalesState extends State<Sales> {
   var tflebanon = TextEditingController(text: '0');
   var totalCommission = 0;
   DateTime selectedDate = DateTime.now();
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime? picked = await showDatePicker(
-        context: context,
-        initialDate: selectedDate,
-        firstDate: DateTime(2015, 8),
-        lastDate: DateTime(2101));
-    if (picked != null && picked != selectedDate) {
-      setState(() {
-        selectedDate = picked;
-      });
-    }
-  }
 
   User? selected;
 
@@ -59,191 +46,47 @@ class _SalesState extends State<Sales> {
               padding: const EdgeInsets.all(10),
               child: Column(
                 children: [
-                  SizedBox(
-                    width: 150,
-                    child: DropdownButton<String>(
-                      hint: Row(
-                        children: const [
-                          Icon(Icons.person_outline),
-                          Text('اختر المندوب'),
-                        ],
-                      ),
-                      items: users!.map((user) {
-                        return DropdownMenuItem<String>(
-                          value: user.id,
-                          child: Text(user.username),
-                        );
-                      }).toList(),
-                      onChanged: (x) {
-                        setState(() {
-                          selected =
-                              users.where((element) => element.id == x).first;
-                        });
-                      },
-                      value: selected?.id,
-                    ),
-                  ),
+                  isAdmin
+                      ? SizedBox(
+                          width: 150,
+                          child: DropdownButton<String>(
+                            hint: Row(
+                              children: const [
+                                Icon(Icons.person_outline),
+                                Text('اختر المندوب'),
+                              ],
+                            ),
+                            items: users!.map((user) {
+                              return DropdownMenuItem<String>(
+                                value: user.id,
+                                child: Text(user.username),
+                              );
+                            }).toList(),
+                            onChanged: (x) {
+                              setState(() {
+                                totalCommission = 0;
+                                tfeast.text = tfwest.text = tfnorth.text =
+                                    tfsowth.text = tflebanon.text = "";
+                                selected = users
+                                    .where((element) => element.id == x)
+                                    .first;
+                              });
+                            },
+                            value: selected?.id,
+                          ),
+                        )
+                      : Container(),
                   selected == null
                       ? Container()
                       : Column(
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(0, 8, 0, 15),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                    child: Image.memory(
-                                      selected!.imageBytes,
-                                      width: size.width / 2 - 15,
-                                      height: size.width / 2 - 15,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                  Column(
-                                    children: [
-                                      const Text('منطقة المندوب:'),
-                                      Text(placeLabel[selected!.place.index]),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceAround,
-                                        children: [
-                                          Text(DateFormat('yyyy-MM')
-                                              .format(selectedDate)),
-                                          const SizedBox(
-                                            width: 10.0,
-                                          ),
-                                          ElevatedButton(
-                                            onPressed: () {
-                                              showMonthPicker(
-                                                context: context,
-                                                initialDate: DateTime.now(),
-                                              ).then((date) {
-                                                if (date != null) {
-                                                  setState(() {
-                                                    selectedDate = date;
-                                                  });
-                                                }
-                                              });
-                                            },
-                                            child: Icon(Icons.calendar_today),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              ),
-                            ),
+                            renderHeader(size, context),
                             Column(
                               children: [
                                 SizedBox(
                                   width: size.width,
                                   height: 220,
-                                  child: GridView(
-                                    gridDelegate:
-                                        const SliverGridDelegateWithMaxCrossAxisExtent(
-                                      maxCrossAxisExtent: 200,
-                                      childAspectRatio: 2.5,
-                                      //    crossAxisSpacing: 20,
-                                      // mainAxisSpacing: 20,
-                                    ),
-                                    children: [
-                                      Container(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: TextField(
-                                          onTapOutside: ((event) {
-                                            FocusScope.of(context).unfocus();
-                                          }),
-                                          onChanged: calculateCommission,
-                                          controller: tfeast,
-                                          keyboardType: TextInputType.number,
-                                          decoration: const InputDecoration(
-                                            border: OutlineInputBorder(),
-                                            labelText: 'المنطقة الشرقية',
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: TextField(
-                                          onTapOutside: ((event) {
-                                            FocusScope.of(context).unfocus();
-                                          }),
-                                          onChanged: calculateCommission,
-                                          controller: tfwest,
-                                          keyboardType: TextInputType.number,
-                                          decoration: const InputDecoration(
-                                            border: OutlineInputBorder(),
-                                            labelText: 'المنطقة الساحلية',
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: TextField(
-                                          onTapOutside: ((event) {
-                                            FocusScope.of(context).unfocus();
-                                          }),
-                                          onChanged: calculateCommission,
-                                          controller: tfnorth,
-                                          keyboardType: TextInputType.number,
-                                          decoration: const InputDecoration(
-                                            border: OutlineInputBorder(),
-                                            labelText: 'المنطقة الشمالية',
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: TextField(
-                                          onTapOutside: ((event) {
-                                            FocusScope.of(context).unfocus();
-                                          }),
-                                          keyboardType: TextInputType.number,
-                                          onChanged: calculateCommission,
-                                          controller: tfsowth,
-                                          decoration: const InputDecoration(
-                                            border: OutlineInputBorder(),
-                                            labelText: 'المنطقة الجنوبية',
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: TextField(
-                                          onTapOutside: ((event) {
-                                            FocusScope.of(context).unfocus();
-                                          }),
-                                          keyboardType: TextInputType.number,
-                                          onChanged: calculateCommission,
-                                          controller: tflebanon,
-                                          decoration: const InputDecoration(
-                                            border: OutlineInputBorder(),
-                                            labelText: 'المنطقة لبنان',
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        margin: EdgeInsets.all(5),
-                                        padding: EdgeInsets.all(8),
-                                        alignment: Alignment.center,
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                            color: Colors.red[500]!,
-                                          ),
-                                          borderRadius: const BorderRadius.all(
-                                            Radius.circular(8),
-                                          ),
-                                        ),
-                                        child: Text(
-                                          'العمولة الكلية: $totalCommission',
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                  child: renderFields(context),
                                 ),
                                 Container(
                                   width: double.infinity,
@@ -257,7 +100,7 @@ class _SalesState extends State<Sales> {
                               ],
                             ),
                           ],
-                        )
+                        ),
                 ],
               ),
             );
@@ -269,6 +112,177 @@ class _SalesState extends State<Sales> {
         future: users,
       ),
       routeName: "عمليات البيع",
+    );
+  }
+
+  Column renderPage(Size size, BuildContext context) {
+    return Column(
+      children: [
+        renderHeader(size, context),
+        Column(
+          children: [
+            SizedBox(
+              width: size.width,
+              height: 220,
+              child: renderFields(context),
+            ),
+            Container(
+              width: double.infinity,
+              height: 60,
+              padding: const EdgeInsets.all(8.0),
+              child: ElevatedButton(
+                onPressed: saveCommission,
+                child: const Text("حفظ"),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Padding renderHeader(Size size, BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 8, 0, 15),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8.0),
+            child: Image.memory(
+              selected!.imageBytes,
+              width: size.width / 2 - 15,
+              height: size.width / 2 - 15,
+              fit: BoxFit.cover,
+            ),
+          ),
+          Column(
+            children: [
+              const Text('منطقة المندوب:'),
+              Text(placeLabel[selected!.place.index]),
+              ElevatedButton(
+                onPressed: () {
+                  showMonthPicker(
+                    context: context,
+                    initialDate: selectedDate,
+                  ).then((date) {
+                    if (date != null) {
+                      setState(() {
+                        selectedDate = date;
+                      });
+                    }
+                  });
+                },
+                child: Text(formatDate(selectedDate)),
+              ),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  GridView renderFields(BuildContext context) {
+    return GridView(
+      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: 200,
+        childAspectRatio: 2.5,
+        //    crossAxisSpacing: 20,
+        // mainAxisSpacing: 20,
+      ),
+      children: [
+        Container(
+          padding: const EdgeInsets.all(8.0),
+          child: TextField(
+            onTapOutside: ((event) {
+              FocusScope.of(context).unfocus();
+            }),
+            onChanged: calculateCommission,
+            controller: tfeast,
+            keyboardType: TextInputType.number,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'المنطقة الشرقية',
+            ),
+          ),
+        ),
+        Container(
+          padding: const EdgeInsets.all(8.0),
+          child: TextField(
+            onTapOutside: ((event) {
+              FocusScope.of(context).unfocus();
+            }),
+            onChanged: calculateCommission,
+            controller: tfwest,
+            keyboardType: TextInputType.number,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'المنطقة الساحلية',
+            ),
+          ),
+        ),
+        Container(
+          padding: const EdgeInsets.all(8.0),
+          child: TextField(
+            onTapOutside: ((event) {
+              FocusScope.of(context).unfocus();
+            }),
+            onChanged: calculateCommission,
+            controller: tfnorth,
+            keyboardType: TextInputType.number,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'المنطقة الشمالية',
+            ),
+          ),
+        ),
+        Container(
+          padding: const EdgeInsets.all(8.0),
+          child: TextField(
+            onTapOutside: ((event) {
+              FocusScope.of(context).unfocus();
+            }),
+            keyboardType: TextInputType.number,
+            onChanged: calculateCommission,
+            controller: tfsowth,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'المنطقة الجنوبية',
+            ),
+          ),
+        ),
+        Container(
+          padding: const EdgeInsets.all(8.0),
+          child: TextField(
+            onTapOutside: ((event) {
+              FocusScope.of(context).unfocus();
+            }),
+            keyboardType: TextInputType.number,
+            onChanged: calculateCommission,
+            controller: tflebanon,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'لبنان',
+            ),
+          ),
+        ),
+        Container(
+          margin: const EdgeInsets.all(5),
+          padding: const EdgeInsets.all(8),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.green[500]!,
+            ),
+            borderRadius: const BorderRadius.all(
+              Radius.circular(8),
+            ),
+          ),
+          child: Text(
+            'العمولة الكلية: $totalCommission',
+          ),
+        ),
+      ],
     );
   }
 
@@ -290,50 +304,53 @@ class _SalesState extends State<Sales> {
   int fixValue(TextEditingController tc, Place p) {
     var e = selected!.place == p ? 5 : 3;
     var es = int.tryParse(tc.text) ?? 0;
-    if (es > b)
+    if (es > b) {
       tc.text = b.toString();
-    else if (es == 0) tc.text = '0';
+    } else if (es == 0) {
+      tc.text = '0';
+    }
     es = min(es, b);
     var ec = min(es, m) * e / 100 + max(0, es - m) * (e == 5 ? 7 : 4) / 100;
     return ec.floor();
   }
 
   Future<void> saveCommission() async {
-    var date = DateFormat('yyyy-MM').format(selectedDate);
+    var date = formatDate(selectedDate);
     showDataAlert(context, "الرجاء الانتظار", loading: true);
-    var com;
-    try {
-      com = await getCommission(selected!.id, date);
-    } catch (e) {}
+    var com = await getCommission(selected!.id, date);
+
     final doc = FirebaseFirestore.instance.collection('Commission').doc();
 
     final comObj = Commission(
-        doc.id,
-        int.parse(tfeast.text),
-        int.parse(tfwest.text),
-        int.parse(tfnorth.text),
-        int.parse(tfsowth.text),
-        int.parse(tflebanon.text),
-        totalCommission,
-        date,
-        selected!.id);
-
+      doc.id,
+      int.tryParse(tfeast.text) ?? 0,
+      int.tryParse(tfwest.text) ?? 0,
+      int.tryParse(tfnorth.text) ?? 0,
+      int.tryParse(tfsowth.text) ?? 0,
+      int.tryParse(tflebanon.text) ?? 0,
+      totalCommission,
+      date,
+      selected!.id,
+    );
+    late String msg;
     if (com != null) {
       await FirebaseFirestore.instance
           .collection('Commission')
           .doc(com.id)
           .update(comObj.toUpdateJson());
-      Navigator.of(context).pop();
-      showDataAlert(context, "تم تحديث السجل");
+      msg = "تم تحديث السجل";
     } else {
       await doc.set(comObj.toJson());
-      Navigator.of(context).pop();
-      showDataAlert(context, "تم حفظ السجل");
+      msg = "تم حفظ السجل";
     }
+    // ignore: use_build_context_synchronously
+    Navigator.of(context).pop();
+    // ignore: use_build_context_synchronously
+    showDataAlert(context, msg);
   }
 }
 
-Future<List<User>> getUsers() async {
+Future<List<User>> getUsers(context) async {
   if (!isAdmin) return [me!];
 
   var users = await FirebaseFirestore.instance.collection('User').get();
@@ -350,19 +367,16 @@ Future<List<User>> getUsers() async {
 }
 
 Future<Commission?> getCommission(String userId, String date) async {
-  CollectionReference commissions =
-      FirebaseFirestore.instance.collection('Commission');
+  var commissions = FirebaseFirestore.instance.collection('Commission');
 
-  QuerySnapshot commission = await commissions
+  var commission = await commissions
       .where('userId', isEqualTo: userId)
       .where('date', isEqualTo: date)
       .get();
 
   for (var doc in commission.docs) {
-    var data = doc.data() as Map<String, dynamic>;
-    if (data['userId'] != null) {
-      return Commission.fromMap(data);
-    }
+    var data = doc.data();
+    if (data['userId'] != null) return Commission.fromMap(data);
   }
   return null;
 }
