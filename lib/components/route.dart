@@ -18,6 +18,12 @@ class _RoutePageState extends State<RoutePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.routeName),
+        backgroundColor: Colors.blueGrey,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(20),
+          ),
+        ),
       ),
       body: Stack(
         children: [

@@ -91,6 +91,9 @@ class _LoginState extends State<Login> {
                 ),
                 ElevatedButton(
                   onPressed: tryLogin,
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStateColor.resolveWith(
+                          (states) => Colors.blueGrey)),
                   child: const Text("تسجيل الدخول"),
                 ),
               ],

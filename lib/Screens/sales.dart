@@ -93,6 +93,10 @@ class _SalesState extends State<Sales> {
                                   height: 60,
                                   padding: const EdgeInsets.all(8.0),
                                   child: ElevatedButton(
+                                    style: ButtonStyle(
+                                        backgroundColor:
+                                            MaterialStateColor.resolveWith(
+                                                (states) => Colors.blueGrey)),
                                     onPressed: saveCommission,
                                     child: const Text("حفظ"),
                                   ),
@@ -131,6 +135,9 @@ class _SalesState extends State<Sales> {
               height: 60,
               padding: const EdgeInsets.all(8.0),
               child: ElevatedButton(
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateColor.resolveWith(
+                        (states) => Colors.blueGrey)),
                 onPressed: saveCommission,
                 child: const Text("حفظ"),
               ),
@@ -160,6 +167,9 @@ class _SalesState extends State<Sales> {
             children: [
               Text('المنطقة: ${placeLabel[selected!.place.index]}'),
               ElevatedButton(
+                style: ButtonStyle(
+                    backgroundColor: MaterialStateColor.resolveWith(
+                        (states) => Colors.blueGrey)),
                 onPressed: () {
                   showMonthPicker(
                     context: context,

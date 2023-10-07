@@ -53,7 +53,7 @@ class _MainPageState extends State<MainPage> {
             return Container(
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                  color: Colors.cyan[50],
+                  color: Color.fromARGB(66, 129, 160, 175),
                   borderRadius: BorderRadius.circular(10)),
               child: TextButton(
                 onPressed: (() {
@@ -70,8 +70,13 @@ class _MainPageState extends State<MainPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(myPages[index].icon),
-                    Text(myPages[index].name),
+                    Icon(
+                      myPages[index].icon,
+                      color: Color.fromARGB(255, 105, 105, 105),
+                      size: 35,
+                    ),
+                    Text(myPages[index].name,
+                        style: TextStyle(color: Colors.black87)),
                   ],
                 ),
               ),

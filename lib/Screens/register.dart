@@ -110,6 +110,9 @@ class _RegisterState extends State<Register> {
                           value: placeNum,
                         ),
                         ElevatedButton(
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateColor.resolveWith(
+                                  (states) => Colors.blueGrey)),
                           onPressed: (() async {
                             imageBytes = Uint8List(0);
                             image = await picker.pickImage(
@@ -152,6 +155,9 @@ class _RegisterState extends State<Register> {
                         width: double.infinity,
                         padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
                         child: ElevatedButton(
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateColor.resolveWith(
+                                  (states) => Colors.blueGrey)),
                           onPressed: () => createUser(),
                           child: const Text("إنشاء"),
                         ),
@@ -240,6 +246,7 @@ class _RegisterState extends State<Register> {
                             icon: const Icon(
                               Icons.delete_forever,
                               weight: 40,
+                              color: Color.fromARGB(255, 100, 25, 20),
                             ),
                           ),
                         ],
