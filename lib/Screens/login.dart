@@ -37,7 +37,9 @@ class _LoginState extends State<Login> {
     // ignore: use_build_context_synchronously
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => const MainPage()),
+      MaterialPageRoute(
+          builder: (context) => const Directionality(
+              textDirection: TextDirection.rtl, child: MainPage())),
     );
   }
 
@@ -104,8 +106,7 @@ class _LoginState extends State<Login> {
 Future<User?> getUser(String username, {bool login = false}) async {
   CollectionReference users = FirebaseFirestore.instance.collection('User');
 
-  QuerySnapshot querySnapshot =
-      await users.where('Username', isEqualTo: username).get();
+  var querySnapshot = await users.where('Username', isEqualTo: username).get();
   User? s;
   me = login ? null : me;
   for (var doc in querySnapshot.docs) {

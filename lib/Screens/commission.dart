@@ -117,8 +117,8 @@ class _CommissionsState extends State<Commissions> {
           ),
           Column(
             children: [
-              const Text('منطقة المندوب:'),
-              Text(placeLabel[selected!.place.index]),
+              Text('المنطقة: ${placeLabel[selected!.place.index]}'),
+              Text('الانضمام: ${selected!.joinDate}'),
               ElevatedButton(
                 onPressed: () {
                   showMonthPicker(

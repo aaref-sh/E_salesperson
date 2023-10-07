@@ -158,8 +158,7 @@ class _SalesState extends State<Sales> {
           ),
           Column(
             children: [
-              const Text('منطقة المندوب:'),
-              Text(placeLabel[selected!.place.index]),
+              Text('المنطقة: ${placeLabel[selected!.place.index]}'),
               ElevatedButton(
                 onPressed: () {
                   showMonthPicker(
